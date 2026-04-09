@@ -198,9 +198,27 @@ export default function App() {
                                     )}
                                   </td>
                                   <td className="px-8 py-5 text-right">
-                                    <button className="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors" onClick={(e) => { e.stopPropagation(); dispatch({ type: 'SELECT', payload: c }); }}>
-                                      <Icon name="chevron_right" />
-                                    </button>
+                                    <div className="flex justify-end gap-1">
+                                      <button 
+                                        className="p-2 text-on-surface-variant hover:bg-surface-container hover:text-primary rounded-lg transition-colors" 
+                                        title="Preview Profile"
+                                        onClick={(e) => { e.stopPropagation(); dispatch({ type: 'SELECT', payload: c }); }}
+                                      >
+                                        <Icon name="visibility" size="text-[20px]" />
+                                      </button>
+                                      <button 
+                                        className="p-2 text-on-surface-variant hover:bg-error/10 hover:text-error rounded-lg transition-colors" 
+                                        title="Delete Candidate"
+                                        onClick={(e) => { 
+                                          e.stopPropagation(); 
+                                          if(confirm('Are you sure you want to delete this candidate?')) {
+                                            dispatch({ type: 'DELETE_CANDIDATE', payload: c.id });
+                                          }
+                                        }}
+                                      >
+                                        <Icon name="delete" size="text-[20px]" />
+                                      </button>
+                                    </div>
                                   </td>
                                 </tr>
                               );
