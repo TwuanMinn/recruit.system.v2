@@ -1,5 +1,8 @@
 import type { ColorSet, ResultOption, Level, InterviewStatus, Gender } from './types';
 
+// ===== Pagination =====
+export const ITEMS_PER_PAGE = 10;
+
 // ===== Level Colors =====
 export const levelColors: Record<Level, ColorSet> = {
   Senior: { bg: '#fef3c7', text: '#92400e', border: '#f59e0b' },
@@ -37,6 +40,12 @@ export const genderIcons: Record<Gender, string> = {
   Female: '♀️',
   Other: '⚧',
 };
+
+// ===== Avatar Colors =====
+export const avatarColors: string[] = [
+  '#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b',
+  '#06b6d4', '#ef4444', '#14b8a6', '#a855f7', '#3b82f6',
+];
 
 // ===== Avatar Gradients =====
 export const avatarGradients: Record<Gender, string> = {

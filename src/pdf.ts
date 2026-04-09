@@ -1,4 +1,5 @@
 import type { Candidate } from './types';
+import { escapeHtml } from './utils/escapeHtml';
 
 function formatSalary(v: string | number): string {
   return v ? Number(v).toLocaleString('en-US') : '';
@@ -10,7 +11,7 @@ export function exportCandidatePDF(c: Candidate): void {
     ? `$${formatSalary(iv.salaryExpectation)}${iv.salaryType === 'monthly' ? ' /month' : ' /year'}`
     : 'Not provided';
 
-  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>${c.name} - Report</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>${escapeHtml(c.name)} - Report</title>
 <style>
 @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -37,39 +38,39 @@ body{font-family:'Segoe UI',Arial,sans-serif;color:#1f2937;background:#fff}
 a{color:#6366f1}
 </style></head><body>
 <div class="header">
-  <h1>${c.name} <span class="badge badge-level">${c.level}</span></h1>
+  <h1>${escapeHtml(c.name)} <span class="badge badge-level">${escapeHtml(c.level)}</span></h1>
   <div class="sub">Interview Report • ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
 </div>
 <div class="content">
   <div class="section">
     <div class="section-title">Contact</div>
     <div class="grid">
-      <div class="field"><div class="field-label">Phone</div><div class="field-value">${c.phone}</div></div>
-      <div class="field"><div class="field-label">Email</div><div class="field-value">${c.gmail}</div></div>
-      <div class="field"><div class="field-label">Gender</div><div class="field-value">${c.gender || 'N/A'}</div></div>
-      <div class="field"><div class="field-label">Interview Status</div><div class="field-value">${c.interviewStatus || 'No Response'}</div></div>
-      <div class="field"><div class="field-label">CV</div><div class="field-value">${c.linkCV || 'N/A'}</div></div>
+      <div class="field"><div class="field-label">Phone</div><div class="field-value">${escapeHtml(c.phone)}</div></div>
+      <div class="field"><div class="field-label">Email</div><div class="field-value">${escapeHtml(c.gmail)}</div></div>
+      <div class="field"><div class="field-label">Gender</div><div class="field-value">${escapeHtml(c.gender || 'N/A')}</div></div>
+      <div class="field"><div class="field-label">Interview Status</div><div class="field-value">${escapeHtml(c.interviewStatus || 'No Response')}</div></div>
+      <div class="field"><div class="field-label">CV</div><div class="field-value">${escapeHtml(c.linkCV || 'N/A')}</div></div>
     </div>
   </div>
   ${iv.interviewDate ? `
   <div class="section">
     <div class="section-title">Assessment</div>
     <div class="grid">
-      <div class="field"><div class="field-label">Date</div><div class="field-value">${iv.interviewDate}</div></div>
-      <div class="field"><div class="field-label">Experience</div><div class="field-value">${iv.yearsExp || 'N/A'} years</div></div>
-      <div class="field"><div class="field-label">Result</div><div class="field-value">${iv.result || 'Pending'}</div></div>
+      <div class="field"><div class="field-label">Date</div><div class="field-value">${escapeHtml(String(iv.interviewDate))}</div></div>
+      <div class="field"><div class="field-label">Experience</div><div class="field-value">${escapeHtml(String(iv.yearsExp || 'N/A'))} years</div></div>
+      <div class="field"><div class="field-label">Result</div><div class="field-value">${escapeHtml(String(iv.result || 'Pending'))}</div></div>
     </div>
     <div class="salary-box" style="margin:16px 0">
       <div class="salary-type">Salary Expectation</div>
-      <div class="salary-amount">${sal}</div>
+      <div class="salary-amount">${escapeHtml(sal)}</div>
     </div>
     <div class="grid">
-      ${iv.strength ? `<div class="card"><div class="card-label">Strengths</div><div class="card-value">${iv.strength}</div></div>` : ''}
-      ${iv.weakness ? `<div class="card"><div class="card-label">Weaknesses</div><div class="card-value">${iv.weakness}</div></div>` : ''}
-      ${iv.background ? `<div class="card"><div class="card-label">Background</div><div class="card-value">${iv.background}</div></div>` : ''}
-      ${iv.skill ? `<div class="card"><div class="card-label">Skills</div><div class="card-value">${iv.skill}</div></div>` : ''}
+      ${iv.strength ? `<div class="card"><div class="card-label">Strengths</div><div class="card-value">${escapeHtml(String(iv.strength))}</div></div>` : ''}
+      ${iv.weakness ? `<div class="card"><div class="card-label">Weaknesses</div><div class="card-value">${escapeHtml(String(iv.weakness))}</div></div>` : ''}
+      ${iv.background ? `<div class="card"><div class="card-label">Background</div><div class="card-value">${escapeHtml(String(iv.background))}</div></div>` : ''}
+      ${iv.skill ? `<div class="card"><div class="card-label">Skills</div><div class="card-value">${escapeHtml(String(iv.skill))}</div></div>` : ''}
     </div>
-    ${iv.note ? `<div class="note-box" style="margin-top:12px"><div class="card-label">Notes</div><div class="card-value">${iv.note}</div></div>` : ''}
+    ${iv.note ? `<div class="note-box" style="margin-top:12px"><div class="card-label">Notes</div><div class="card-value">${escapeHtml(String(iv.note))}</div></div>` : ''}
   </div>` : ''}
 </div>
 <div class="footer">Recruitment System • Confidential</div>
@@ -90,15 +91,15 @@ export function exportAllPDF(candidates: Candidate[]): void {
         ? `$${formatSalary(iv.salaryExpectation)}${iv.salaryType === 'monthly' ? '/mo' : '/yr'}`
         : '-';
       return `<tr>
-        <td>${c.name}</td>
-        <td>${c.gender || '-'}</td>
-        <td>${c.level}</td>
-        <td>${c.phone}</td>
-        <td>${c.gmail}</td>
-        <td>${c.interviewStatus || 'N/A'}</td>
-        <td>${iv?.yearsExp || '-'}</td>
-        <td>${sal}</td>
-        <td>${iv?.result || 'Pending'}</td>
+        <td>${escapeHtml(c.name)}</td>
+        <td>${escapeHtml(c.gender || '-')}</td>
+        <td>${escapeHtml(c.level)}</td>
+        <td>${escapeHtml(c.phone)}</td>
+        <td>${escapeHtml(c.gmail)}</td>
+        <td>${escapeHtml(c.interviewStatus || 'N/A')}</td>
+        <td>${escapeHtml(String(iv?.yearsExp || '-'))}</td>
+        <td>${escapeHtml(sal)}</td>
+        <td>${escapeHtml(String(iv?.result || 'Pending'))}</td>
       </tr>`;
     })
     .join('');

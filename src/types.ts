@@ -1,5 +1,33 @@
 // ===== Core Types =====
 
+export type ActivityAction =
+  | 'created'
+  | 'status_changed'
+  | 'level_changed'
+  | 'profile_updated'
+  | 'assessment_recorded'
+  | 'assessment_updated'
+  | 'result_changed'
+  | 'deleted'
+  | 'restored';
+
+export interface ActivitySnapshot {
+  result?: string;
+  interviewStatus?: string;
+  level?: string;
+  yearsExp?: string;
+  salaryExpectation?: string;
+  salaryType?: 'monthly' | 'yearly';
+  skill?: string;
+}
+
+export interface ActivityLogEntry {
+  action: ActivityAction;
+  timestamp: string;
+  details?: string;
+  snapshot?: ActivitySnapshot;
+}
+
 export interface Interview {
   strength: string;
   weakness: string;
@@ -22,6 +50,14 @@ export type ResultValue =
   | 'Rejected'
   | 'Future Consideration';
 
+export type SortField = 'name' | 'level' | 'status' | 'createdAt';
+export type SortDirection = 'asc' | 'desc';
+
+export interface SortConfig {
+  field: SortField;
+  direction: SortDirection;
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -34,33 +70,10 @@ export interface Candidate {
   interviewConfirmed: boolean;
   createdAt: string;
   interview: Interview | null;
+  activityLog: ActivityLogEntry[];
 }
 
-export interface AppState {
-  candidates: Candidate[];
-  view: 'list' | 'detail';
-  selectedCandidate: Candidate | null;
-  showForm: boolean;
-  showInterview: boolean;
-  showEditCandidate: boolean;
-  searchTerm: string;
-  filterLevel: string;
-  filterResult: string;
-}
 
-export type AppAction =
-  | { type: 'ADD_CANDIDATE'; payload: Candidate }
-  | { type: 'UPDATE_CANDIDATE'; payload: Candidate }
-  | { type: 'DELETE_CANDIDATE'; payload: string }
-  | { type: 'SELECT'; payload: Candidate }
-  | { type: 'SET_VIEW'; payload: 'list' | 'detail' }
-  | { type: 'TOGGLE_FORM' }
-  | { type: 'TOGGLE_INTERVIEW' }
-  | { type: 'TOGGLE_EDIT_CANDIDATE' }
-  | { type: 'SET_SEARCH'; payload: string }
-  | { type: 'SET_FILTER_LEVEL'; payload: string }
-  | { type: 'SET_FILTER_RESULT'; payload: string }
-  | { type: 'LOAD_CANDIDATES'; payload: Candidate[] };
 
 // ===== Design Tokens =====
 

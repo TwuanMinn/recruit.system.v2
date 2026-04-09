@@ -1,17 +1,24 @@
 import React from 'react';
-import type { AppAction, AppState, Candidate } from '../types';
-import { Badge, StatusDot, Icon, Btn } from './ui';
+import type { Candidate } from '../types';
+import { Badge, StatusDot, Icon, Btn, Avatar } from './ui';
 import { exportCandidatePDF } from '../pdf';
 import EditCandidateForm from './EditCandidateForm';
 import InterviewForm from './InterviewForm';
+import ActivityTimeline from './ActivityTimeline';
+import toast from 'react-hot-toast';
+import { useCandidateStore } from '../store/useCandidateStore';
 
 interface Props {
   candidate: Candidate;
-  dispatch: React.Dispatch<AppAction>;
-  state: AppState;
 }
 
-const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
+const CandidateDetail: React.FC<Props> = ({ candidate }) => {
+  const setView = useCandidateStore((s) => s.setView);
+  const toggleEditCandidate = useCandidateStore((s) => s.toggleEditCandidate);
+  const toggleInterview = useCandidateStore((s) => s.toggleInterview);
+  const showEditCandidate = useCandidateStore((s) => s.showEditCandidate);
+  const showInterview = useCandidateStore((s) => s.showInterview);
+
   const iv = candidate.interview;
   const isConfirmed = candidate.interviewStatus === 'Confirmed';
 
@@ -19,27 +26,26 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
     <div className="space-y-6">
       {/* Detail Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
-          onClick={() => dispatch({ type: 'SET_VIEW', payload: 'list' })}
-          className="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors"
-        >
-          <Icon name="arrow_back" />
-        </button>
-        <div>
-          <h2 className="text-2xl font-black text-on-surface flex items-center gap-3">
-            {candidate.name}
-            {candidate.gender === 'Male' && <Icon name="male" className="text-secondary" size="text-xl" />}
-            {candidate.gender === 'Female' && <Icon name="female" className="text-error" size="text-xl" />}
-          </h2>
-          <p className="text-on-surface/50 text-sm mt-0.5">{candidate.gmail} • {candidate.phone}</p>
-        </div>
+            onClick={() => setView('list')}
+            className="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors"
+            aria-label="Back to candidate list"
+          >
+            <Icon name="arrow_back" />
+          </button>
+          <Avatar name={candidate.name} id={candidate.id} size="w-12 h-12 text-sm" />
+          <div>
+            <h2 className="text-2xl font-black text-on-surface flex items-center gap-3">
+              {candidate.name}
+              {candidate.gender === 'Male' && <Icon name="male" className="text-secondary" size="text-xl" />}
+              {candidate.gender === 'Female' && <Icon name="female" className="text-error" size="text-xl" />}
+            </h2>
+            <p className="text-on-surface/50 text-sm mt-0.5">{candidate.gmail} • {candidate.phone}</p>
+          </div>
         </div>
         <div className="w-full sm:mx-0 sm:ml-auto flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <Btn className="w-full sm:w-auto justify-center" variant="tonal" icon="edit" onClick={() => dispatch({ type: 'TOGGLE_EDIT_CANDIDATE' })}>
-            Edit Form
-          </Btn>
-          <Btn className="w-full sm:w-auto justify-center" variant="ghost" icon="picture_as_pdf" onClick={() => exportCandidatePDF(candidate)}>
+          <Btn className="w-full sm:w-auto justify-center" variant="ghost" icon="picture_as_pdf" onClick={() => { exportCandidatePDF(candidate); toast.success('PDF exported'); }}>
             Export PDF
           </Btn>
         </div>
@@ -50,24 +56,27 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-surface-container-lowest p-5 sm:p-6 rounded-xl card-shadow border border-outline-variant/10">
             <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface/40 mb-5">Profile Details</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Status</div>
                 {iv?.result ? (
-                  <Badge 
-                    label={`Result: ${iv.result}`} 
-                    colors={{ 
-                      text: iv.result === 'Rejected' ? '#ac3149' : '#006d4a', 
-                      border: iv.result === 'Rejected' ? '#ac3149' : '#006d4a', 
-                      bg: 'transparent' 
-                    }} 
+                  <Badge
+                    label={`Result: ${iv.result}`}
+                    colors={{
+                      text: iv.result === 'Rejected' ? 'var(--status-denied)' : 'var(--status-confirmed)',
+                      border: iv.result === 'Rejected' ? 'var(--status-denied)' : 'var(--status-confirmed)',
+                      bg: 'transparent'
+                    }}
                   />
                 ) : (
-                  <StatusDot label={candidate.interviewStatus === 'Rejected' ? 'Denied' : (candidate.interviewStatus || 'No Response')} color={isConfirmed ? '#006d4a' : '#ac3149'} />
+                  <StatusDot
+                    label={candidate.interviewStatus === 'Rejected' ? 'Denied' : (candidate.interviewStatus || 'No Response')}
+                    color={isConfirmed ? 'var(--status-confirmed)' : 'var(--status-denied)'}
+                  />
                 )}
               </div>
-              
+
               <div>
                 <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Level</div>
                 <div className="text-sm font-bold text-on-surface">{candidate.level}</div>
@@ -81,22 +90,35 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                   </a>
                 </div>
               )}
+
+              <div>
+                <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest mb-1">Added</div>
+                <div className="text-sm font-medium text-on-surface/60">{candidate.createdAt}</div>
+              </div>
             </div>
           </div>
+
+          {/* Activity Timeline */}
+          <ActivityTimeline activityLog={candidate.activityLog || []} />
         </div>
 
         {/* Right Column: Assessment */}
         <div className="lg:col-span-2">
-          {iv && (
-            <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 animate-fade-in">
+          {iv ? (
+            <div className="bg-surface-container-lowest p-5 sm:p-8 rounded-xl card-shadow border border-outline-variant/10 animate-fade-in">
               <div className="flex justify-between items-start mb-8">
                 <div>
                   <h3 className="text-lg font-bold text-on-surface mb-1">Interview Assessment</h3>
                   <div className="text-xs font-bold text-on-surface/50">Date: {iv.interviewDate}</div>
                 </div>
-                <Btn variant="tonal" icon="edit_note" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>
-                  Edit Notes
-                </Btn>
+                <div className="flex items-center gap-2">
+                  <Btn variant="ghost" icon="edit" onClick={toggleEditCandidate}>
+                    Edit Form
+                  </Btn>
+                  <Btn variant="tonal" icon="edit_note" onClick={toggleInterview}>
+                    Edit Notes
+                  </Btn>
+                </div>
               </div>
 
               {iv.salaryExpectation && (
@@ -107,8 +129,8 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                   <div>
                     <div className="text-[0.625rem] font-bold text-on-surface/40 uppercase tracking-widest">Expected Salary</div>
                     <div className="text-2xl font-black text-secondary mt-0.5">
-                      {isNaN(Number(iv.salaryExpectation)) 
-                        ? iv.salaryExpectation 
+                      {isNaN(Number(iv.salaryExpectation))
+                        ? iv.salaryExpectation
                         : `$${Number(iv.salaryExpectation).toLocaleString('en-US')}`
                       }
                       <span className="text-sm font-bold opacity-60">
@@ -154,12 +176,21 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
                 </div>
               )}
             </div>
+          ) : (
+            <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-surface-container rounded-2xl flex items-center justify-center">
+                <Icon name="rate_review" size="text-3xl" className="text-on-surface/20" />
+              </div>
+              <h3 className="text-lg font-bold text-on-surface mb-2">No Assessment Yet</h3>
+              <p className="text-sm text-on-surface/50 mb-6">Record the first interview assessment for this candidate.</p>
+              <Btn icon="add" onClick={toggleInterview}>Start Assessment</Btn>
+            </div>
           )}
         </div>
       </div>
 
-      {state.showEditCandidate && <EditCandidateForm candidate={candidate} dispatch={dispatch} />}
-      {state.showInterview && <InterviewForm candidate={candidate} dispatch={dispatch} />}
+      {showEditCandidate && <EditCandidateForm candidate={candidate} onSuccess={() => toast.success('Profile updated')} />}
+      {showInterview && <InterviewForm candidate={candidate} onSuccess={() => toast.success('Assessment saved')} />}
     </div>
   );
 };
