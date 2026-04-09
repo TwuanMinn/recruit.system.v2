@@ -48,9 +48,9 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
   return (
     <>
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         {summaryCards.map((s) => (
-          <div key={s.label} className="bg-surface-container-lowest p-6 rounded-xl card-shadow border border-outline-variant/10">
+          <div key={s.label} className="bg-surface-container-lowest p-5 sm:p-6 rounded-xl card-shadow border border-outline-variant/10">
             <div className={`w-12 h-12 ${s.containerBg} ${s.iconColor} rounded-xl flex items-center justify-center mb-4`}>
               <Icon name={s.icon} />
             </div>
@@ -83,8 +83,8 @@ export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
   });
 
   return (
-    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow">
-      <h3 className="text-lg font-bold text-on-surface mb-6">Talent Distribution</h3>
+    <div className="bg-surface-container-lowest flex flex-col p-5 sm:p-8 rounded-xl card-shadow border border-outline-variant/10">
+      <h3 className="text-sm font-bold tracking-[0.05em] uppercase text-on-surface/50 mb-6">Talent Distribution</h3>
       <div className="space-y-6">
         {lCounts.map((l) => (
           <div key={l.label}>
@@ -117,8 +117,8 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
   }));
 
   return (
-    <div className="bg-surface-container-low p-8 rounded-xl">
-      <h3 className="text-lg font-bold text-on-surface mb-6">Application Results</h3>
+    <div className="bg-surface-container-lowest p-5 sm:p-8 rounded-xl card-shadow border border-outline-variant/10 h-max">
+      <h3 className="text-sm font-bold tracking-[0.05em] uppercase text-on-surface/50 mb-6">Application Results</h3>
       <div className="grid grid-cols-2 gap-4">
         {rCounts.map((r) => (
           <div key={r.label} className="bg-surface-container-lowest p-4 rounded-xl text-center">

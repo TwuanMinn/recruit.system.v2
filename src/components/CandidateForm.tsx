@@ -28,7 +28,7 @@ const CandidateForm: React.FC<Props> = ({ dispatch }) => {
   };
 
   return (
-    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10">
+    <div className="bg-surface-container-lowest p-5 sm:p-8 rounded-xl card-shadow border border-outline-variant/10">
       <div className="flex justify-between items-center mb-8 pb-6 border-b border-outline-variant/5">
         <div>
           <h2 className="text-2xl font-black text-on-surface">Add New Candidate</h2>
@@ -48,13 +48,13 @@ const CandidateForm: React.FC<Props> = ({ dispatch }) => {
         <Sel label="Seniority Level" value={f.level} onChange={set('level')} options={[{ value: 'Senior', label: 'Senior' }, { value: 'Beginner', label: 'Beginner' }, { value: 'Newbie', label: 'Newbie' }]} />
       </div>
 
-      <div className="mb-8 p-6 bg-surface-container-low rounded-xl">
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-surface-container-low rounded-xl">
         <ConfirmPicker value={f.interviewStatus} onChange={(v) => setF({ ...f, interviewStatus: v })} />
       </div>
 
-      <div className="flex gap-4">
-        <Btn icon="save" onClick={submit}>Save Profile</Btn>
-        <Btn variant="tonal" onClick={() => dispatch({ type: 'TOGGLE_FORM' })}>Cancel</Btn>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <Btn className="w-full sm:w-auto justify-center" icon="save" onClick={submit}>Save Profile</Btn>
+        <Btn className="w-full sm:w-auto justify-center" variant="tonal" onClick={() => dispatch({ type: 'TOGGLE_FORM' })}>Cancel</Btn>
       </div>
     </div>
   );

@@ -28,10 +28,10 @@ const InterviewForm: React.FC<Props> = ({ candidate, dispatch }) => {
   const submit = () => dispatch({ type: 'UPDATE_CANDIDATE', payload: { ...candidate, interview: f as any } });
 
   return (
-    <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow border border-outline-variant/10 mt-8 relative z-50 shadow-[0_20px_50px_-12px_rgba(13,52,89,0.15)] animate-fade-in">
-      <div className="flex justify-between items-center mb-8 pb-6 border-b border-outline-variant/5">
+    <div className="bg-surface-container-lowest p-5 sm:p-8 rounded-xl card-shadow border border-outline-variant/10 mt-8 relative z-50 shadow-[0_20px_50px_-12px_rgba(13,52,89,0.15)] animate-fade-in">
+      <div className="flex justify-between items-center mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-outline-variant/5">
         <div>
-          <h2 className="text-2xl font-black text-on-surface">Record Assessment</h2>
+          <h2 className="text-xl sm:text-2xl font-black text-on-surface">Record Assessment</h2>
           <p className="text-xs font-bold tracking-widest text-on-surface/40 uppercase mt-1">For {candidate.name}</p>
         </div>
         <button onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })} className="p-2 bg-surface text-on-surface hover:bg-surface-container-high rounded-full transition-colors">
@@ -44,7 +44,7 @@ const InterviewForm: React.FC<Props> = ({ candidate, dispatch }) => {
         <Sel label="Final Decision" value={f.result} onChange={set('result')} options={resultOptions} />
       </div>
 
-      <div className="bg-secondary-container/10 border border-secondary-container/20 p-6 rounded-xl mb-6">
+      <div className="bg-secondary-container/10 border border-secondary-container/20 p-4 sm:p-6 rounded-xl mb-6">
         <h4 className="text-[0.625rem] font-bold text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
           <Icon name="monetization_on" size="text-sm" /> Compensation
         </h4>
@@ -66,9 +66,9 @@ const InterviewForm: React.FC<Props> = ({ candidate, dispatch }) => {
         <TextArea label="Final HR Remarks" placeholder="Private notes..." value={f.note} onChange={set('note')} />
       </div>
 
-      <div className="flex gap-4 pt-6 border-t border-outline-variant/5">
-        <Btn icon="check" variant="success" onClick={submit}>Commit Assessment</Btn>
-        <Btn variant="tonal" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>Cancel</Btn>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-outline-variant/5">
+        <Btn className="w-full sm:w-auto justify-center" icon="check" variant="success" onClick={submit}>Commit Assessment</Btn>
+        <Btn className="w-full sm:w-auto justify-center" variant="tonal" onClick={() => dispatch({ type: 'TOGGLE_INTERVIEW' })}>Cancel</Btn>
       </div>
     </div>
   );

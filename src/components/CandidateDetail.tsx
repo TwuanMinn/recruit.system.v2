@@ -18,8 +18,9 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
   return (
     <div className="space-y-6">
       {/* Detail Header */}
-      <div className="flex items-center gap-4 mb-4">
-        <button
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <button
           onClick={() => dispatch({ type: 'SET_VIEW', payload: 'list' })}
           className="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-colors"
         >
@@ -33,11 +34,12 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
           </h2>
           <p className="text-on-surface/50 text-sm mt-0.5">{candidate.gmail} • {candidate.phone}</p>
         </div>
-        <div className="ml-auto flex gap-3">
-          <Btn variant="tonal" icon="edit" onClick={() => dispatch({ type: 'TOGGLE_EDIT_CANDIDATE' })}>
+        </div>
+        <div className="w-full sm:mx-0 sm:ml-auto flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Btn className="w-full sm:w-auto justify-center" variant="tonal" icon="edit" onClick={() => dispatch({ type: 'TOGGLE_EDIT_CANDIDATE' })}>
             Edit Form
           </Btn>
-          <Btn variant="ghost" icon="picture_as_pdf" onClick={() => exportCandidatePDF(candidate)}>
+          <Btn className="w-full sm:w-auto justify-center" variant="ghost" icon="picture_as_pdf" onClick={() => exportCandidatePDF(candidate)}>
             Export PDF
           </Btn>
         </div>
@@ -46,7 +48,7 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Core Info */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-surface-container-lowest p-6 rounded-xl card-shadow border border-outline-variant/10">
+          <div className="bg-surface-container-lowest p-5 sm:p-6 rounded-xl card-shadow border border-outline-variant/10">
             <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface/40 mb-5">Profile Details</h3>
             
             <div className="space-y-4">

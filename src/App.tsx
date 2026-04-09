@@ -61,7 +61,7 @@ export default function App() {
       <main className="min-h-screen w-full max-w-7xl mx-auto">
 
 
-        <div className="px-8 pb-12">
+        <div className="px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
         <AnimatePresence mode="wait">
           {view === 'list' && !showForm && (
             <motion.div
@@ -72,15 +72,15 @@ export default function App() {
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
               {/* Header Title Section */}
-              <div className="py-8 flex justify-between items-end">
+              <div className="py-6 sm:py-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 sm:gap-4">
                 <div>
-                  <h1 className="text-4xl font-extrabold tracking-tight text-on-surface">Candidates Overview</h1>
-                  <p className="text-on-surface/60 mt-1">Reviewing the latest talent acquisition metrics and profiles.</p>
+                  <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-on-surface">Candidates Overview</h1>
+                  <p className="text-sm sm:text-base text-on-surface/60 mt-1">Reviewing the latest talent acquisition metrics and profiles.</p>
                 </div>
-                <div className="flex gap-3">
-                  <div className="relative">
+                <div className="flex flex-row w-full sm:w-auto gap-3">
+                  <div className="relative flex-1 sm:flex-none">
                     <button 
-                      className={`px-5 py-2.5 font-bold text-sm rounded-xl active:scale-95 transition-all flex items-center gap-2 ${filterOpen || filterLevel !== 'all' || filterResult !== 'all' ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-on-surface hover:bg-surface-container-highest/80'}`}
+                      className={`w-full sm:w-auto justify-center px-4 sm:px-5 py-2.5 font-bold text-sm rounded-xl active:scale-95 transition-all flex items-center gap-2 ${filterOpen || filterLevel !== 'all' || filterResult !== 'all' ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-on-surface hover:bg-surface-container-highest/80'}`}
                       onClick={() => setFilterOpen(!filterOpen)}
                     >
                       <Icon name="filter_list" size="text-lg" /> Filter
@@ -88,7 +88,7 @@ export default function App() {
                     </button>
 
                     {filterOpen && (
-                      <div className="absolute right-0 mt-2 w-56 bg-surface-container-lowest border border-outline-variant/10 shadow-xl rounded-2xl p-5 z-50 animate-fade-in card-shadow text-left">
+                      <div className="absolute left-0 sm:left-auto right-0 mt-2 w-full sm:w-56 bg-surface-container-lowest border border-outline-variant/10 shadow-xl rounded-2xl p-5 z-50 animate-fade-in card-shadow text-left">
                         <div className="mb-4">
                           <label className="block text-[0.625rem] font-bold tracking-[0.05em] text-on-surface/50 uppercase mb-2">Seniority Level</label>
                           <select 
@@ -122,7 +122,7 @@ export default function App() {
                     )}
                   </div>
                   <button
-                    className="px-5 py-2.5 bg-primary text-on-primary font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dim"
+                    className="flex-1 sm:flex-none justify-center px-4 sm:px-5 py-2.5 bg-primary text-on-primary font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dim"
                     onClick={() => dispatch({ type: 'TOGGLE_FORM' })}
                   >
                     <Icon name="add" size="text-lg" /> Add Candidate
@@ -139,9 +139,9 @@ export default function App() {
                 {/* Left Side: Table */}
                 <div className="lg:col-span-2">
                   <div className="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden border border-outline-variant/10">
-                    <div className="px-8 py-6 border-b border-outline-variant/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50">
-                      <h3 className="text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
-                      <div className="relative w-full max-w-sm">
+                    <div className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 border-b border-outline-variant/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50">
+                      <h3 className="text-lg sm:text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
+                      <div className="relative w-full sm:max-w-sm">
                         <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40" />
                         <input
                           className="w-full pl-12 pr-4 py-2.5 bg-surface-container border-none rounded-xl focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface/40 text-sm outline-none transition-all focus:bg-surface-container-lowest"
@@ -278,7 +278,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="py-8 max-w-4xl mx-auto"
+              className="py-4 sm:py-8 max-w-4xl mx-auto"
             >
               <CandidateDetail candidate={candidates.find((c) => c.id === selectedCandidate.id) || selectedCandidate} dispatch={dispatch} state={state} />
             </motion.div>
@@ -292,7 +292,7 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3, ease: "backOut" }}
-              className="py-8 max-w-3xl mx-auto"
+              className="py-4 sm:py-8 max-w-3xl mx-auto"
             >
               <CandidateForm dispatch={dispatch} />
             </motion.div>
