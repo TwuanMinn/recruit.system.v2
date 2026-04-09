@@ -66,11 +66,11 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-8">
       {summaryConfig.map((s, i) => (
         <div
           key={s.key}
-          className="relative overflow-hidden bg-surface-container-lowest p-5 sm:p-6 rounded-2xl card-shadow card-hover border border-outline-variant/10 cursor-default animate-slide-up"
+          className="relative overflow-hidden bg-surface-container-lowest p-3 sm:p-6 rounded-2xl card-shadow card-hover border border-outline-variant/10 cursor-default animate-slide-up"
           style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}
         >
           {/* Subtle gradient overlay */}
@@ -78,19 +78,19 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
 
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-13 h-13 ${s.iconBg} ${s.iconColor} rounded-xl flex items-center justify-center p-2.5`}>
-                <Icon name={s.icon} size="text-3xl" />
+              <div className={`w-10 h-10 sm:w-13 sm:h-13 ${s.iconBg} ${s.iconColor} rounded-xl flex items-center justify-center p-2 sm:p-2.5`}>
+                <Icon name={s.icon} size="text-xl sm:text-3xl" />
               </div>
               {s.key !== 'total' && total > 0 && (
-                <span className={`text-base font-extrabold tabular-nums ${s.valueColor}`}>
+                <span className={`text-sm sm:text-base font-extrabold tabular-nums ${s.valueColor}`}>
                   {Math.round((values[s.key] / total) * 100)}%
                 </span>
               )}
             </div>
-            <span className="text-[0.6875rem] font-semibold tracking-wide uppercase text-on-surface/45 block mb-1">
+            <span className="text-[0.6rem] sm:text-[0.6875rem] font-semibold tracking-wide uppercase text-on-surface/45 block mb-0.5 sm:mb-1 truncate">
               {s.label}
             </span>
-            <div className={`text-3xl sm:text-4xl font-extrabold ${s.valueColor} tracking-tight tabular-nums`}>
+            <div className={`text-2xl sm:text-4xl font-extrabold ${s.valueColor} tracking-tight tabular-nums`}>
               <CountUp to={values[s.key]} />
             </div>
           </div>
