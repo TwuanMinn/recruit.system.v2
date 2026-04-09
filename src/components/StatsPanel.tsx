@@ -131,7 +131,7 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
 
   return (
     <div className="bg-surface-container-low p-8 rounded-xl">
-      <h3 className="text-lg font-bold text-on-surface mb-6">Application Health</h3>
+      <h3 className="text-lg font-bold text-on-surface mb-6">Application Results</h3>
       <div className="grid grid-cols-2 gap-4">
         {rCounts.map((r) => (
           <div key={r.label} className="bg-surface-container-lowest p-4 rounded-xl text-center">
