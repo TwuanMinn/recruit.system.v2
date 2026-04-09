@@ -33,6 +33,9 @@ export function reducer(state: AppState, action: AppAction): AppState {
         ...state,
         candidates: [...state.candidates, action.payload],
         showForm: false,
+        view: 'detail',
+        selectedCandidate: action.payload,
+        showInterview: true,
       };
       persistCandidates(next.candidates);
       return next;
