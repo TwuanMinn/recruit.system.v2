@@ -52,20 +52,7 @@ export default function App() {
 
       {/* ===== Main Content ===== */}
       <main className="min-h-screen w-full max-w-7xl mx-auto">
-        {/* TopAppBar */}
-        <header className="w-full sticky top-0 z-40 bg-surface/90 backdrop-blur-md flex justify-between items-center px-8 py-4 border-b border-outline-variant/5">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="relative w-full max-w-md">
-              <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40" />
-              <input
-                className="w-full pl-12 pr-4 py-2.5 bg-surface-container-lowest border-none rounded-xl focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface/30 text-sm shadow-soft outline-none"
-                placeholder="Search for candidates, skills..."
-                value={searchTerm}
-                onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
-              />
-            </div>
-          </div>
-        </header>
+
 
         <div className="px-8 pb-12">
           {view === 'list' && !showForm && (
@@ -98,11 +85,17 @@ export default function App() {
                 {/* Left Side: Table */}
                 <div className="lg:col-span-2">
                   <div className="bg-surface-container-lowest rounded-xl card-shadow overflow-hidden border border-outline-variant/10">
-                    <div className="px-8 py-6 border-b border-outline-variant/10 flex justify-between items-center bg-white/50">
-                      <h3 className="text-xl font-bold text-on-surface">Recent Candidates</h3>
-                      <button className="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
-                        View All <Icon name="arrow_forward" size="text-xs" />
-                      </button>
+                    <div className="px-8 py-6 border-b border-outline-variant/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50">
+                      <h3 className="text-xl font-bold text-on-surface whitespace-nowrap">Recent Candidates</h3>
+                      <div className="relative w-full max-w-sm">
+                        <Icon name="search" className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40" />
+                        <input
+                          className="w-full pl-12 pr-4 py-2.5 bg-surface-container border-none rounded-xl focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface/40 text-sm outline-none transition-all focus:bg-surface-container-lowest"
+                          placeholder="Search for candidates..."
+                          value={searchTerm}
+                          onChange={(e) => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
+                        />
+                      </div>
                     </div>
                     <div className="overflow-x-auto">
                       {filtered.length === 0 ? (
