@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { AppAction, AppState, Candidate } from '../types';
 import { Badge, StatusDot, Icon, Btn } from './ui';
 import { exportCandidatePDF } from '../pdf';
@@ -12,6 +12,7 @@ interface Props {
 }
 
 const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const iv = candidate.interview;
   const isConfirmed = candidate.interviewStatus === 'Confirmed';
 
@@ -75,11 +76,26 @@ const CandidateDetail: React.FC<Props> = ({ candidate, dispatch, state }) => {
             </div>
             
             <div className="mt-8 pt-6 border-t border-outline-variant/10 text-center">
-              <Btn variant="danger" className="w-full justify-center" onClick={() => {
-                if (confirm('Delete this candidate forever?')) dispatch({ type: 'DELETE_CANDIDATE', payload: candidate.id });
-              }}>
-                Delete Candidate
-              </Btn>
+              {confirmDelete ? (
+                <div className="flex bg-error/10 text-error rounded-xl overflow-hidden animate-fade-in w-full">
+                  <button 
+                    className="flex-1 py-3 text-sm font-bold hover:bg-error/20 transition-colors"
+                    onClick={() => dispatch({ type: 'DELETE_CANDIDATE', payload: candidate.id })}
+                  >
+                    Confirm Delete
+                  </button>
+                  <button 
+                    className="px-4 py-3 hover:bg-error/20 transition-colors border-l border-error/10"
+                    onClick={() => setConfirmDelete(false)}
+                  >
+                    <Icon name="close" size="text-[18px]" />
+                  </button>
+                </div>
+              ) : (
+                <Btn variant="danger" className="w-full justify-center" onClick={() => setConfirmDelete(true)}>
+                  Delete Candidate
+                </Btn>
+              )}
             </div>
           </div>
         </div>

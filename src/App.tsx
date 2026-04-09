@@ -26,6 +26,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { candidates, view, selectedCandidate, showForm, searchTerm, filterLevel, filterResult } = state;
   const [filterOpen, setFilterOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -206,18 +207,33 @@ export default function App() {
                                       >
                                         <Icon name="visibility" size="text-[20px]" />
                                       </button>
-                                      <button 
-                                        className="p-2 text-on-surface-variant hover:bg-error/10 hover:text-error rounded-lg transition-colors" 
-                                        title="Delete Candidate"
-                                        onClick={(e) => { 
-                                          e.stopPropagation(); 
-                                          if(confirm('Are you sure you want to delete this candidate?')) {
-                                            dispatch({ type: 'DELETE_CANDIDATE', payload: c.id });
-                                          }
-                                        }}
-                                      >
-                                        <Icon name="delete" size="text-[20px]" />
-                                      </button>
+                                      {deleteConfirmId === c.id ? (
+                                        <div className="flex items-center bg-error/10 text-error rounded-lg overflow-hidden animate-fade-in">
+                                          <button 
+                                            className="px-3 py-2 text-xs font-bold hover:bg-error/20 transition-colors"
+                                            onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_CANDIDATE', payload: c.id }); setDeleteConfirmId(null); }}
+                                          >
+                                            Confirm
+                                          </button>
+                                          <button 
+                                            className="px-2 py-2 hover:bg-error/20 transition-colors"
+                                            onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(null); }}
+                                          >
+                                            <Icon name="close" size="text-[16px]" />
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <button 
+                                          className="p-2 text-on-surface-variant hover:bg-error/10 hover:text-error rounded-lg transition-colors" 
+                                          title="Delete Candidate"
+                                          onClick={(e) => { 
+                                            e.stopPropagation(); 
+                                            setDeleteConfirmId(c.id);
+                                          }}
+                                        >
+                                          <Icon name="delete" size="text-[20px]" />
+                                        </button>
+                                      )}
                                     </div>
                                   </td>
                                 </tr>
