@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Candidate } from '../types';
 import { Badge, StatusDot, Icon, Btn, Avatar } from './ui';
-import { exportCandidatePDF } from '../pdf';
+import { exportCandidateReport } from '../pdf';
 import EditCandidateForm from './EditCandidateForm';
 import InterviewForm from './InterviewForm';
 import ActivityTimeline from './ActivityTimeline';
@@ -45,7 +45,7 @@ const CandidateDetail: React.FC<Props> = ({ candidate }) => {
           </div>
         </div>
         <div className="w-full sm:mx-0 sm:ml-auto flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <Btn className="w-full sm:w-auto justify-center" variant="ghost" icon="picture_as_pdf" onClick={() => { exportCandidatePDF(candidate); toast.success('PDF exported'); }}>
+          <Btn className="w-full sm:w-auto justify-center" variant="ghost" icon="picture_as_pdf" onClick={() => { exportCandidateReport(candidate); toast.success('PDF exported'); }}>
             Export PDF
           </Btn>
         </div>

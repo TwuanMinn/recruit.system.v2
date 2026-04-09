@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver';
 import type { Candidate, Level, Gender, InterviewStatus } from './types';
 
 export function exportAllCSV(candidates: Candidate[]): void {
@@ -20,12 +21,7 @@ export function exportAllCSV(candidates: Candidate[]): void {
 
   const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `candidates_${new Date().toISOString().split('T')[0]}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
+  saveAs(blob, `candidates_${new Date().toISOString().split('T')[0]}.csv`);
 }
 
 function escapeCsv(value: string): string {

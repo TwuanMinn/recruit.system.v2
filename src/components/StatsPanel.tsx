@@ -4,7 +4,10 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis
 import type { Candidate, Level } from '../types';
 import { Icon } from './ui';
 import { CountUp } from './CountUp';
-import { useDarkMode } from '../hooks/useDarkMode';
+
+function isDark() {
+  return document.documentElement.classList.contains('dark');
+}
 
 interface Props {
   candidates: Candidate[];
@@ -67,7 +70,7 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
       {summaryConfig.map((s, i) => (
         <div
           key={s.key}
-          className={`relative overflow-hidden bg-surface-container-lowest p-5 sm:p-6 rounded-2xl card-shadow card-hover border border-outline-variant/10 cursor-default animate-slide-up`}
+          className="relative overflow-hidden bg-surface-container-lowest p-5 sm:p-6 rounded-2xl card-shadow card-hover border border-outline-variant/10 cursor-default animate-slide-up"
           style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}
         >
           {/* Subtle gradient overlay */}
@@ -99,7 +102,7 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
 
 // ===== Talent Distribution (Right Rail) =====
 export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
-  const [darkMode] = useDarkMode();
+  const darkMode = isDark();
   const total = candidates.length;
   const lCounts = levels.map((l) => {
     const count = candidates.filter((c) => c.level === l).length;
@@ -197,7 +200,7 @@ export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
 
 // ===== Application Health (Right Rail) =====
 export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
-  const [darkMode] = useDarkMode();
+  const darkMode = isDark();
   const totalAssessed = candidates.filter((c) => c.interview?.result).length;
   const rCounts = resultKeys.map((r) => ({
     label: resultLabels[r],
@@ -232,11 +235,6 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
     <div className="bg-surface-container-lowest p-5 sm:p-8 rounded-2xl card-shadow border border-outline-variant/10 h-max">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-sm font-bold tracking-[0.05em] uppercase text-on-surface/50">Application Results</h3>
-        {totalAssessed > 0 && (
-          <span className="text-xs font-bold text-on-surface/35 tabular-nums flex items-center gap-1">
-            <Icon name="trending_up" size="text-sm" className="text-secondary" /> {totalAssessed} assessed
-          </span>
-        )}
       </div>
 
       {/* Bar chart */}
@@ -247,13 +245,13 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)'} />
               <XAxis
                 dataKey="label"
-                tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? 'rgba(200,214,233,0.45)' : 'rgba(15,23,42,0.4)' }}
+                tick={{ fontSize: 12, fontWeight: 700, fill: darkMode ? '#c8d6e9' : '#1e293b' }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
                 allowDecimals={false}
-                tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? 'rgba(200,214,233,0.35)' : 'rgba(15,23,42,0.3)' }}
+                tick={{ fontSize: 11, fontWeight: 700, fill: darkMode ? '#a0b3cc' : '#334155' }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -272,7 +270,7 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
                 <LabelList
                   dataKey="pctLabel"
                   position="top"
-                  style={{ fontSize: 10, fontWeight: 700, fill: darkMode ? 'rgba(200,214,233,0.6)' : 'rgba(15,23,42,0.5)' }}
+                  style={{ fontSize: 12, fontWeight: 800, fill: darkMode ? '#e2e8f0' : '#0f172a' }}
                 />
               </Bar>
             </BarChart>
@@ -293,6 +291,34 @@ export const ApplicationHealth: React.FC<Props> = ({ candidates }) => {
           </div>
         ))}
       </div>
+
+      {/* Assessed Stat — bottom summary */}
+      {totalAssessed > 0 && (
+        <div className="mt-5 bg-gradient-to-r from-secondary/6 to-secondary/2 border border-secondary/12 rounded-lg px-3.5 py-3 flex items-center gap-3">
+          <div className="w-9 h-9 bg-secondary/10 rounded-lg flex items-center justify-center shrink-0">
+            <Icon name="assignment_turned_in" className="text-secondary" size="text-lg" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="text-lg font-extrabold text-secondary tabular-nums leading-none">
+                <CountUp to={totalAssessed} />
+              </span>
+              <span className="text-[0.65rem] font-bold text-secondary/60">
+                / {candidates.length} assessed
+              </span>
+              <span className="ml-auto text-xs font-extrabold text-secondary tabular-nums">
+                {candidates.length > 0 ? Math.round((totalAssessed / candidates.length) * 100) : 0}%
+              </span>
+            </div>
+            <div className="h-1.5 w-full bg-secondary/8 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-secondary to-secondary/70 rounded-full transition-all duration-700 ease-out"
+                style={{ width: `${candidates.length > 0 ? Math.round((totalAssessed / candidates.length) * 100) : 0}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

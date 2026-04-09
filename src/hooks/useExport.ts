@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import toast from 'react-hot-toast';
 import { exportAllCSV, importCSV, deduplicateCandidates } from '../csv';
 import { useCandidateStore } from '../store/useCandidateStore';
@@ -13,6 +14,7 @@ export function useExport() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const exportToPDF = useCallback(() => {
+    try {
     const doc = new jsPDF();
     const total = candidates.length;
     const confirmed = candidates.filter((c) => c.interviewStatus === 'Confirmed').length;
@@ -70,7 +72,7 @@ export function useExport() {
       columnStyles: { 1: { halign: 'center' }, 2: { halign: 'center' } },
     });
 
-    const resultsY = (doc as Record<string, any>).lastAutoTable.finalY + 6;
+    const resultsY = ((doc as Record<string, any>).lastAutoTable?.finalY ?? 60) + 6;
     autoTable(doc, {
       head: [['Application Results', 'Hired', 'Potential Talented', 'Rejected', 'Future Consideration']],
       body: [
@@ -97,7 +99,7 @@ export function useExport() {
       columnStyles: { 0: { halign: 'left', fontStyle: 'bold' } },
     });
 
-    const tableStartY = (doc as Record<string, any>).lastAutoTable.finalY + 8;
+    const tableStartY = ((doc as Record<string, any>).lastAutoTable?.finalY ?? 80) + 8;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(77, 73, 217);
@@ -128,16 +130,27 @@ export function useExport() {
       alternateRowStyles: { fillColor: [245, 245, 255] },
     });
 
-    doc.save(`recruitment_report_${new Date().toISOString().split('T')[0]}.pdf`);
+    const pdfBlob = doc.output('blob');
+    saveAs(pdfBlob, `recruitment_report_${new Date().toISOString().split('T')[0]}.pdf`);
     toast.success('PDF exported successfully');
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      toast.error('PDF export failed — check console for details');
+    }
   }, [candidates]);
 
   const handleExportCSV = useCallback(() => {
-    exportAllCSV(candidates);
-    toast.success('CSV exported successfully');
+    try {
+      exportAllCSV(candidates);
+      toast.success('CSV exported successfully');
+    } catch (err) {
+      console.error('CSV export failed:', err);
+      toast.error('CSV export failed');
+    }
   }, [candidates]);
 
   const handleExportExcel = useCallback(() => {
+    try {
     const rows = candidates.map((c: Candidate) => ({
       Name: c.name,
       Email: c.gmail,
@@ -154,8 +167,14 @@ export function useExport() {
     const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Candidates');
-    XLSX.writeFile(wb, `candidates_${new Date().toISOString().split('T')[0]}.xlsx`);
+    const xlsxBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const xlsxBlob = new Blob([xlsxBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(xlsxBlob, `candidates_${new Date().toISOString().split('T')[0]}.xlsx`);
     toast.success('Excel exported successfully');
+    } catch (err) {
+      console.error('Excel export failed:', err);
+      toast.error('Excel export failed');
+    }
   }, [candidates]);
 
   const handleImportCSV = useCallback(() => {

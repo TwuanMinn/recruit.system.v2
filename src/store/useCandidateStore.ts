@@ -50,10 +50,12 @@ export interface CandidateState {
   restoreCandidate: (id: string) => void;
   permanentlyDeleteCandidate: (id: string) => void;
   emptyTrash: () => void;
+  restoreAll: () => void;
 
   // Bulk selection
   toggleSelectCandidate: (id: string) => void;
   selectAllCandidates: (ids: string[]) => void;
+  setSelection: (ids: string[]) => void;
   clearSelection: () => void;
   bulkSoftDelete: () => void;
   bulkUpdateStatus: (status: InterviewStatus) => void;
@@ -224,6 +226,18 @@ export const useCandidateStore = create<CandidateState>()(
 
       emptyTrash: () => set({ deletedCandidates: [] }),
 
+      restoreAll: () =>
+        set((state) => {
+          const restored = state.deletedCandidates.map((c) => ({
+            ...c,
+            activityLog: [...(c.activityLog || []), logEntry('restored', 'Restored from trash')],
+          }));
+          return {
+            candidates: [...state.candidates, ...restored],
+            deletedCandidates: [],
+          };
+        }),
+
       // ===== Bulk Selection =====
       toggleSelectCandidate: (id) =>
         set((state) => ({
@@ -234,13 +248,15 @@ export const useCandidateStore = create<CandidateState>()(
 
       selectAllCandidates: (ids) =>
         set((state) => {
-          const allSelected = ids.every((id) => state.selectedIds.includes(id));
+          const allSelected = ids.length > 0 && ids.every((id) => state.selectedIds.includes(id));
           return {
             selectedIds: allSelected
               ? state.selectedIds.filter((sid) => !ids.includes(sid))
               : [...new Set([...state.selectedIds, ...ids])],
           };
         }),
+
+      setSelection: (ids) => set({ selectedIds: ids }),
 
       clearSelection: () => set({ selectedIds: [] }),
 

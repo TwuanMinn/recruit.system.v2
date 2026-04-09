@@ -61,13 +61,13 @@ const ChartPanel: React.FC<Props> = ({ candidates }) => {
             />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? 'rgba(200,214,233,0.45)' : 'rgba(15,23,42,0.4)' }}
+              tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? '#ffffff' : '#000000' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               allowDecimals={false}
-              tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? 'rgba(200,214,233,0.35)' : 'rgba(15,23,42,0.3)' }}
+              tick={{ fontSize: 10, fontWeight: 700, fill: darkMode ? '#ffffff' : '#000000' }}
               axisLine={false}
               tickLine={false}
             />
@@ -89,7 +89,7 @@ const ChartPanel: React.FC<Props> = ({ candidates }) => {
                 style={{
                   fontSize: 10,
                   fontWeight: 700,
-                  fill: darkMode ? 'rgba(200,214,233,0.6)' : 'rgba(15,23,42,0.5)',
+                  fill: darkMode ? '#ffffff' : '#000000',
                 }}
               />
             </Bar>

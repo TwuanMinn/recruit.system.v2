@@ -28,7 +28,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [darkMode, toggleDarkMode] = useDarkMode();
 
-  const { sorted, paginated, totalPages, handleSort } = useFilteredCandidates();
+  const { sorted, paginated, totalPages, handleSort, activeFilters } = useFilteredCandidates();
   const {
     fileInputRef, exportToPDF, handleExportCSV,
     handleExportExcel, handleImportCSV, onCSVFileSelected,
@@ -193,6 +193,7 @@ export default function App() {
                         onExportCSV={handleExportCSV}
                         onExportExcel={handleExportExcel}
                         onImportCSV={handleImportCSV}
+                        activeFilters={activeFilters}
                       />
                     )}
                   </div>

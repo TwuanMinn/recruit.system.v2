@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Candidate, Level, SortConfig, SortField } from '../types';
+import type { SearchFilter } from '../hooks/useFilteredCandidates';
 import { StatusDot, Icon, Avatar } from './ui';
 import { EmptyStateIllustration } from './EmptyState';
 import { useCandidateStore } from '../store/useCandidateStore';
@@ -16,6 +17,7 @@ interface Props {
   currentPage: number;
   totalPages: number;
   deleteConfirmId: string | null;
+  activeFilters?: SearchFilter[];
   onSearch: (term: string) => void;
   onSort: (field: SortField) => void;
   onSelect: (c: Candidate) => void;
@@ -73,8 +75,10 @@ const CandidateTable: React.FC<Props> = ({
   onExportCSV,
   onExportExcel,
   onImportCSV,
+  activeFilters = [],
 }) => {
   const [exportOpen, setExportOpen] = useState(false);
+  const [hintsOpen, setHintsOpen] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const selectedIds = useCandidateStore((s) => s.selectedIds);
@@ -155,10 +159,12 @@ const CandidateTable: React.FC<Props> = ({
           <input
             id="search-candidates"
             className="w-full pl-12 pr-16 py-3 bg-surface border border-outline-variant/20 rounded-2xl focus:border-primary/50 focus:ring-4 focus:ring-primary/10 placeholder:text-on-surface/40 text-sm font-medium outline-none transition-all shadow-sm hover:shadow-md focus:shadow-md"
-            placeholder="Search candidates..."
+            placeholder="Search or try level:senior, result:hired..."
             value={searchTerm}
             onChange={(e) => onSearch(e.target.value)}
-            aria-label="Search candidates by name, email, phone, level, or notes"
+            onFocus={() => !searchTerm && setHintsOpen(true)}
+            onBlur={() => setTimeout(() => setHintsOpen(false), 200)}
+            aria-label="Smart search — use prefixes like level:senior, status:confirmed, result:hired, salary:>5000"
           />
           {searchTerm ? (
             <button
@@ -175,7 +181,68 @@ const CandidateTable: React.FC<Props> = ({
               </kbd>
             </div>
           )}
+
+          {/* Smart Search Hints Dropdown */}
+          {hintsOpen && !searchTerm && (
+            <div className="absolute left-0 right-0 top-full mt-2 bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant/15 p-4 z-50 animate-fade-in">
+              <div className="text-[0.625rem] font-bold uppercase tracking-widest text-on-surface/35 mb-3">Smart Search Syntax</div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                {[
+                  { prefix: 'level:', example: 'senior', desc: 'Filter by level' },
+                  { prefix: 'status:', example: 'confirmed', desc: 'Interview status' },
+                  { prefix: 'result:', example: 'hired', desc: 'Application result' },
+                  { prefix: 'salary:', example: '>5000', desc: 'Salary range' },
+                  { prefix: 'skill:', example: 'react', desc: 'Core skills' },
+                  { prefix: 'exp:', example: '>3', desc: 'Years experience' },
+                  { prefix: 'gender:', example: 'female', desc: 'Gender filter' },
+                  { prefix: 'name:', example: 'john', desc: 'Name search' },
+                ].map((h) => (
+                  <button
+                    key={h.prefix}
+                    className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-surface-container-high transition-colors text-left group"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      onSearch(h.prefix);
+                      setHintsOpen(false);
+                      document.getElementById('search-candidates')?.focus();
+                    }}
+                  >
+                    <code className="text-[0.7rem] font-bold text-primary bg-primary/8 px-1.5 py-0.5 rounded">{h.prefix}{h.example}</code>
+                    <span className="text-[0.625rem] text-on-surface/40 group-hover:text-on-surface/60">{h.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Active Smart Filters */}
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 px-4 sm:px-6 lg:px-8 -mt-1 pb-3">
+            <span className="text-[0.6rem] font-bold uppercase tracking-widest text-on-surface/30 mr-1">Filters:</span>
+            {activeFilters.map((f, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-1 px-2 py-1 bg-primary/8 text-primary text-[0.65rem] font-bold rounded-lg border border-primary/15"
+              >
+                <span className="opacity-60">{f.key}:</span>{f.value}
+                <button
+                  onClick={() => onSearch(searchTerm.replace(f.raw, '').trim())}
+                  className="ml-0.5 hover:text-error transition-colors"
+                  aria-label={`Remove ${f.key} filter`}
+                >
+                  <Icon name="close" size="text-[12px]" />
+                </button>
+              </span>
+            ))}
+            <button
+              onClick={() => onSearch('')}
+              className="text-[0.6rem] font-bold text-error/60 hover:text-error ml-1 transition-colors"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Bulk Action Bar */}
