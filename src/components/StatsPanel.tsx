@@ -86,10 +86,14 @@ const StatsPanel: React.FC<Props> = ({ candidates }) => {
 // ===== Talent Distribution (Right Rail) =====
 export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
   const total = candidates.length;
-  const lCounts = levels.map((l) => ({
-    label: l,
-    pct: total > 0 ? Math.round((candidates.filter((c) => c.level === l).length / total) * 100) : 0,
-  }));
+  const lCounts = levels.map((l) => {
+    const count = candidates.filter((c) => c.level === l).length;
+    return {
+      label: l,
+      count,
+      pct: total > 0 ? Math.round((count / total) * 100) : 0,
+    };
+  });
 
   return (
     <div className="bg-surface-container-lowest p-8 rounded-xl card-shadow">
@@ -99,7 +103,9 @@ export const TalentDistribution: React.FC<Props> = ({ candidates }) => {
           <div key={l.label}>
             <div className="flex justify-between text-sm font-bold mb-2">
               <span className="text-on-surface">{l.label}</span>
-              <span className={levelTextColors[l.label as Level]}>{l.pct}%</span>
+              <span className={levelTextColors[l.label as Level]}>
+                {l.count} <span className="opacity-60 font-medium text-xs ml-1">({l.pct}%)</span>
+              </span>
             </div>
             <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
               <div
