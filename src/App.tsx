@@ -200,16 +200,12 @@ export default function App() {
                                       {c.level}
                                     </span>
                                   </td>
-                                  <td className="px-8 py-5">
-                                    {c.interview?.result ? (
-                                      <StatusDot label={c.interview.result} color={c.interview.result === 'Hired' ? '#006d4a' : '#ac3149'} />
-                                    ) : (
+                                    <td className="px-8 py-5">
                                       <StatusDot
                                         label={c.interviewStatus || 'No Response'}
-                                        color={isConfirmed ? '#006d4a' : '#ac3149'}
+                                        color={isConfirmed ? '#006d4a' : c.interviewStatus === 'Rejected' ? '#ac3149' : '#416188'}
                                       />
-                                    )}
-                                  </td>
+                                    </td>
                                   <td className="px-8 py-5 text-right">
                                     <div className="flex justify-end gap-1">
                                       <button 
