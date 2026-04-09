@@ -180,7 +180,7 @@ export default function App() {
                           className="self-start px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg border border-transparent hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-sm shadow-red-600/20"
                           title="Export Table to PDF"
                         >
-                          <Icon name="download" size="text-sm" /> Export PDF
+                          <Icon name="download" size="text-sm" /> Export All PDF
                         </button>
                       </div>
                       <div className="relative w-full sm:max-w-sm">
