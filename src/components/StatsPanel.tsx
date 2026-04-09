@@ -35,14 +35,13 @@ const resultLabels: Record<string, string> = {
 };
 
 const StatsPanel: React.FC<Props> = ({ candidates }) => {
-  const totalAssessed = candidates.filter((c) => c.interview?.result).length;
   const total = candidates.length;
 
   const summaryCards = [
     { label: 'Total Candidates', value: total, icon: 'groups', containerBg: 'bg-primary-container/30', iconColor: 'text-primary' },
     { label: 'Confirmed', value: candidates.filter((c) => c.interviewStatus === 'Confirmed').length, icon: 'check_circle', containerBg: 'bg-secondary-container/30', iconColor: 'text-secondary' },
-    { label: 'Assessed', value: totalAssessed, icon: 'assignment_turned_in', containerBg: 'bg-tertiary-container/30', iconColor: 'text-tertiary' },
-    { label: 'Hired', value: candidates.filter((c) => c.interview?.result === 'Hired').length, icon: 'emoji_events', containerBg: 'bg-surface-variant/50', iconColor: 'text-primary-dim' },
+    { label: 'Rejected', value: candidates.filter((c) => c.interviewStatus === 'Rejected').length, icon: 'cancel', containerBg: 'bg-error-container/30', iconColor: 'text-error' },
+    { label: 'No Response', value: candidates.filter((c) => c.interviewStatus === 'No Response').length, icon: 'schedule', containerBg: 'bg-surface-variant/50', iconColor: 'text-outline' },
   ];
 
   return (
